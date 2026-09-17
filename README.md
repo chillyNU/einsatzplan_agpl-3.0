@@ -16,8 +16,7 @@ Handwerksbetriebe, technische Dienste). Verwaltet Termine je Mitarbeiter und
 Wochentag, bietet eine mobile Ansicht für Mitarbeiter unterwegs, Druckansichten,
 PLZ-Autovervollständigung und einen Admin-Bereich zur Konfiguration.
 
-Früher als kommerzielle Software vertrieben, seit diesem Repository freie
-Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
+Freie Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
 
 ## Inhalt
 
