@@ -298,7 +298,7 @@ if (!headers_sent()) {
 
     <div class="faq-box">
         <h3>Unter welcher Lizenz steht die Software?</h3>
-        <p>Einsatzplan ist freie Software und steht unter der GNU Affero General Public License v3.0 (AGPL-3.0). Quelltext, Lizenztext und Mitwirkungshinweise findest du im Projekt-Repository. Du darfst die Software frei nutzen, verändern und weitergeben; wer eine veränderte Version öffentlich über ein Netzwerk anbietet, muss den veränderten Quellcode ebenfalls unter der AGPL-3.0 bereitstellen.</p>
+        <p>Einsatzplan ist freie Software und steht unter der GNU Affero General Public License v3.0 (AGPL-3.0). Quelltext, Lizenztext und Mitwirkungshinweise findest du im Projekt-Repository: <a href="https://github.com/chillyNU/einsatzplan_agpl-3.0" target="_blank" rel="noopener">github.com/chillyNU/einsatzplan_agpl-3.0</a>. Du darfst die Software frei nutzen, verändern und weitergeben; wer eine veränderte Version öffentlich über ein Netzwerk anbietet, muss den veränderten Quellcode ebenfalls unter der AGPL-3.0 bereitstellen.</p>
     </div>
 
     <div class="faq-box">
