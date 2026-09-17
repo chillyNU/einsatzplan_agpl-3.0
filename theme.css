@@ -1,0 +1,338 @@
+/* ============================================================
+   EINSATZPLAN – Zentrales Design-System (helles Theme)
+   Wird von ALLEN Seiten eingebunden. Seitenspezifisches liegt
+   in style.css (Plan) bzw. in kleinen Blöcken der Einzelseiten.
+   ============================================================ */
+
+:root {
+    /* Marke */
+    --brand: #d81e2c;
+    --brand-dark: #ae1420;
+    --brand-tint: #fdecee;
+
+    /* Mitarbeiter-Leitfarben (Signatur des Designs) */
+    --t1: #0e7c66;        /* Mitarbeiter 1: Tannengrün */
+    --t1-tint: #e6f4f0;
+    --t1-line: #b9ddd3;
+    --t2: #2f5eb3;        /* Mitarbeiter 2: Königsblau */
+    --t1-hover: #d3ece4;  /* Hover-Farbe Spalte 1 (deutlich grün) */
+    --t2-hover: #d8e4f8;  /* Hover-Farbe Spalte 2 (deutlich blau) */
+    --t2-tint: #eaf0fb;
+    --t2-line: #c6d7f1;
+    --t3: #0e91a6;        /* Mitarbeiter 3: Teal (zwischen Grün und Blau) */
+    --t3-tint: #e4f5f7;
+    --t3-line: #b3e0e6;
+    --t3-hover: #d0eef1;  /* Hover-Farbe Spalte 3 (deutlich teal) */
+    --t4: #c07a1e;        /* Mitarbeiter 4: Bernstein (warmer Akzent) */
+    --t4-tint: #fbf1e2;
+    --t4-line: #ecd4ac;
+    --t4-hover: #f6e6cd;  /* Hover-Farbe Spalte 4 (deutlich bernstein) */
+    /* Erweiterte Editionen (Pro/Premium): Mitarbeiter 5–12 */
+    --t5: #6d4fb3;        /* Mitarbeiter 5: Violett */
+    --t5-tint: #f0ecf9;
+    --t5-line: #d3c8ec;
+    --t5-hover: #e2d9f3;
+    --t6: #b02d6e;        /* Mitarbeiter 6: Beere */
+    --t6-tint: #f9e9f1;
+    --t6-line: #edc4d9;
+    --t6-hover: #f3d5e4;
+    --t7: #7a821c;        /* Mitarbeiter 7: Oliv */
+    --t7-tint: #f3f4e3;
+    --t7-line: #dbdfb0;
+    --t7-hover: #e9ebcb;
+    --t8: #b5451f;        /* Mitarbeiter 8: Ziegel */
+    --t8-tint: #faece6;
+    --t8-line: #eec9b9;
+    --t8-hover: #f4dacd;
+    --t9: #56708c;        /* Mitarbeiter 9: Schieferblau */
+    --t9-tint: #ecf0f5;
+    --t9-line: #c9d4e0;
+    --t9-hover: #dbe3ec;
+    --t10: #3e6b23;       /* Mitarbeiter 10: Laubgrün */
+    --t10-tint: #eaf2e4;
+    --t10-line: #c6dcb6;
+    --t10-hover: #d8e8cc;
+    --t11: #8a5a2e;       /* Mitarbeiter 11: Nussbraun */
+    --t11-tint: #f4ede5;
+    --t11-line: #ddc8b0;
+    --t11-hover: #eadbc8;
+    --t12: #4a4f8c;       /* Mitarbeiter 12: Indigo */
+    --t12-tint: #ebecf5;
+    --t12-line: #c8cbe4;
+    --t12-hover: #dadcee;
+
+    /* Neutrale Skala */
+    --ink: #1d2733;
+    --ink-soft: #5b6875;
+    --ink-faint: #8b96a3;
+    --bg: #eef1f5;
+    --surface: #ffffff;
+    --surface-alt: #f6f8fa;
+    --line: #dde3ea;
+    --line-strong: #c8d1db;
+
+    /* Status */
+    --ok: #1d7a3d;      --ok-tint: #e7f4ec;    --ok-line: #bfe0cc;
+    --warn: #9a6b00;    --warn-tint: #fdf4dc;  --warn-line: #ecd9a0;
+    --danger: #b3261e;  --danger-tint: #fdecea;--danger-line: #f2c4c0;
+
+    /* Geometrie & Effekte */
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow-1: 0 1px 3px rgba(29, 39, 51, 0.08);
+    --shadow-2: 0 8px 24px rgba(29, 39, 51, 0.14);
+
+    /* Abwärtskompatible Aliasse (alte Variablennamen im Bestand) */
+    --drk-red: var(--brand);
+    --green: var(--ok);
+    --red: var(--brand);
+    --blue: var(--t2);
+    --tech-peach: var(--surface-alt);
+}
+
+/* ---------- Basis ---------- */
+* { box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; letter-spacing: -0.01em; }
+h1 { font-size: 1.65em; }
+h2 { font-size: 1.3em; }
+
+a { color: var(--t2); }
+a:hover { color: var(--brand); }
+
+code {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.9em;
+}
+
+::selection { background: var(--brand-tint); }
+
+:focus-visible { outline: 2px solid var(--t2); outline-offset: 2px; border-radius: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    html { scroll-behavior: auto !important; }
+}
+
+/* ---------- Seiten-Container (Bestandsklassen der Unterseiten) ---------- */
+.container, .container-we, .box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
+    padding: 28px 32px;
+}
+
+.page-title,
+.container > h1:first-child,
+.container-we > h1:first-child,
+.box > h1:first-child {
+    margin-top: 0;
+}
+
+h1 { border-bottom: 2px solid var(--line); padding-bottom: 12px; }
+h1, .container h1, .box h1 { color: var(--ink); }
+
+/* Eyebrow / Markenzeile über Seitentiteln */
+.eyebrow {
+    display: block;
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 4px;
+}
+
+/* Abschnitts-Überschriften (Admin & Co.) */
+.section-h,
+.container h3 {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 1.02em;
+    margin: 40px 0 16px;
+}
+
+/* ---------- Buttons ---------- */
+button, .btn, .btn-add, .btn-update, .btn-action, .btn-primary,
+.btn-back, .btn-mail, .btn-cancel, .pg-btn {
+    font-family: inherit;
+    font-size: 0.92em;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    text-decoration: none;
+}
+
+.btn-primary, .btn-add, .btn-action {
+    background: var(--brand);
+    color: #fff;
+    border: 1px solid var(--brand);
+    padding: 10px 18px;
+    display: inline-block;
+}
+.btn-primary:hover, .btn-add:hover, .btn-action:hover { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; }
+
+.btn-update {
+    background: var(--ok);
+    color: #fff;
+    border: 1px solid var(--ok);
+    padding: 8px 14px;
+}
+.btn-update:hover { background: #16612f; }
+
+.btn-secondary, .btn-back, .btn-mail, .btn-cancel {
+    background: var(--surface);
+    color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    padding: 9px 16px;
+    display: inline-block;
+}
+.btn-secondary:hover, .btn-back:hover, .btn-mail:hover, .btn-cancel:hover {
+    background: var(--surface-alt);
+    color: var(--ink);
+    border-color: var(--ink-faint);
+}
+
+.back-btn { text-decoration: none; color: var(--ink-soft); font-weight: 600; }
+.back-btn:hover { color: var(--ink); }
+
+/* ---------- Formulare ---------- */
+input[type="text"], input[type="password"], input[type="number"],
+input[type="date"], input[type="email"], input[type="time"],
+select, textarea {
+    font-family: inherit;
+    font-size: 0.95em;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 9px 11px;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: var(--t2);
+    box-shadow: 0 0 0 3px var(--t2-tint);
+    outline: none;
+}
+
+.form-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: flex-end;
+}
+
+/* ---------- Tabellen ---------- */
+table { border-collapse: collapse; }
+.container table, .container-we table, .we-table, .search-table, .res-table {
+    width: 100%;
+    background: var(--surface);
+    font-size: 0.92em;
+}
+.container th, .container td,
+.container-we th, .container-we td,
+.we-table th, .we-table td {
+    border: 1px solid var(--line);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+.container th, .container-we th, .we-table th {
+    background: var(--surface-alt);
+    color: var(--ink-soft);
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.container tbody tr:hover td, .we-table tbody tr:hover td { background: #fafbfd; }
+
+/* ---------- Meldungen ---------- */
+.msg, .msg-banner, .alert, .info-box {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 18px;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+.msg-success, .alert-success { background: var(--ok-tint); color: var(--ok); border-color: var(--ok-line); }
+.msg-error, .alert-error { background: var(--danger-tint); color: var(--danger); border-color: var(--danger-line); }
+.msg-warn { background: var(--warn-tint); color: var(--warn); border-color: var(--warn-line); }
+
+/* ---------- Badges ---------- */
+.badge-admin { background: var(--brand); color: #fff; padding: 2px 8px; border-radius: 20px; font-size: 0.75em; font-weight: 700; }
+.badge-user { background: var(--ink-soft); color: #fff; padding: 2px 8px; border-radius: 20px; font-size: 0.75em; font-weight: 700; }
+.tag { background: var(--surface-alt); border: 1px solid var(--line); padding: 3px 9px; border-radius: 12px; font-size: 0.75em; color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- Kopf-Navigation der Unterseiten ---------- */
+.header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--line); padding-bottom: 15px; }
+.top-nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.top-nav a { text-decoration: none; font-size: 0.9em; font-weight: 600; color: var(--ink-soft); }
+.top-nav a:hover { color: var(--brand); }
+.nav-link-db { color: var(--t2); }
+.nav-link-plan { color: var(--ink-soft); }
+
+/* Pill-Navigation (z.B. Kopfzeile der Admin-Seite) */
+.nav-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--surface); color: var(--ink-soft) !important;
+    border: 1px solid var(--line-strong);
+    padding: 7px 14px; border-radius: 20px;
+    font-size: 0.85em; font-weight: 600; text-decoration: none;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+.nav-pill:hover { background: var(--surface-alt); color: var(--ink) !important; border-color: var(--ink-faint); }
+.nav-pill-primary { background: var(--ink); border-color: var(--ink); color: #fff !important; }
+.nav-pill-primary:hover { background: #000; border-color: #000; color: #fff !important; }
+
+/* ---------- Footer ---------- */
+.app-footer {
+    text-align: center;
+    margin: 24px auto;
+    padding: 8px 22px;
+    font-size: 0.8em;
+    background: var(--surface);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 50px;
+    width: fit-content;
+    box-shadow: var(--shadow-1);
+}
+.app-footer a { color: var(--ink-soft); text-decoration: none; margin: 0 10px; font-weight: 600; }
+.app-footer a:hover { color: var(--brand); }
+
+/* ---------- Mitarbeiter-Leitfarben als Utility ---------- */
+.tech-1-ident { color: var(--t1); }
+.tech-2-ident { color: var(--t2); }
+.tech-3-ident { color: var(--t3); }
+.tech-4-ident { color: var(--t4); }
+.tech-5-ident { color: var(--t5); }
+.tech-6-ident { color: var(--t6); }
+.tech-7-ident { color: var(--t7); }
+.tech-8-ident { color: var(--t8); }
+.tech-9-ident { color: var(--t9); }
+.tech-10-ident { color: var(--t10); }
+.tech-11-ident { color: var(--t11); }
+.tech-12-ident { color: var(--t12); }

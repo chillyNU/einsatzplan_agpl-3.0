@@ -1,0 +1,14 @@
+# Laufzeitdaten der Installation - enthalten echte Kundendaten und duerfen
+# niemals ins Repository gelangen.
+/data/*.sqlite
+/data/*.sqlite-*
+/data/db_config.php
+/data/.installation
+
+# Lokale Editor-/OS-Dateien
+.DS_Store
+Thumbs.db
+*.swp
+
+# Von PHP zur Laufzeit ggf. erzeugte Logs
+*.log

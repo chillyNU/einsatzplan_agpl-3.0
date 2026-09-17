@@ -1,0 +1,10 @@
+# ── Einsatzplan: Schutz sensibler Dateien (nur Apache) ────────────────────────
+# Für Nginx/LiteSpeed liegt die entsprechende Regel in server_schutz.conf bei.
+
+# Direkten Zugriff auf Datenbank, Konfiguration und interne Includes sperren
+<FilesMatch "\.(sqlite|sqlite-wal|sqlite-shm|db)$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^(config|db_helpers|init_db)\.php$">
+    Require all denied
+</FilesMatch>

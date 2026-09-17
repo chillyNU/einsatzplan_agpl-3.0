@@ -1,0 +1,723 @@
+/* ============================================================
+   EINSATZPLAN – Hauptansicht (index.php)
+   Baut auf theme.css auf. Signatur: Farbleitsystem der beiden
+   Tagesmitarbeiter (M1 = Tannengrün, M2 = Königsblau).
+   ============================================================ */
+
+body { scroll-behavior: smooth; }
+.main-wrapper { max-width: 80%; margin: 0 auto; padding: 20px 0; min-width: 1100px; }
+
+/* Tablet-/schmale Desktop-Ansicht: Sobald die freie Fläche links neben dem
+   Plan schmaler als die Wochentag-Leiste wird, würde diese über den Terminen
+   liegen. Deshalb bekommt der Plan hier einen linken Rand (~10% der Breite),
+   sodass die Pills links daneben Platz haben – wie in der Desktop-Ansicht. */
+@media (max-width: 1400px) {
+    .main-wrapper {
+        max-width: none; min-width: 0;
+        margin: 0 auto;
+        /* links Platz für die Wochentag-Leiste, rechts etwas Rand */
+        padding-left: 90px;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+}
+@media (max-width: 800px) {
+    /* Sehr schmal: Leiste braucht weniger festen Platz */
+    .main-wrapper { padding-left: 70px; padding-right: 10px; }
+}
+
+/* ---------- Kopfbereich ---------- */
+.header-area {
+    margin-bottom: 22px;
+    background: var(--surface);
+    padding: 12px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-1);
+    position: relative;
+}
+.header-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 14px 26px;
+}
+@media (max-width: 1600px) {
+    .header-grid { grid-template-columns: auto 1fr; }
+    .hdr-center { justify-content: flex-end; }
+    .hdr-right { grid-column: 1 / -1; justify-content: flex-end; }
+}
+/* Sobald es neben der Überschrift eng wird: komplette Navigation als Block in
+   eine eigene Zeile unter die Marke – zentriert, sauber gestapelt. */
+@media (max-width: 1150px) {
+    .header-grid { grid-template-columns: 1fr; gap: 14px; justify-items: center; }
+    .brand-block { text-align: center; }
+    .hdr-center, .hdr-right {
+        grid-column: 1 / -1; justify-content: center; flex-wrap: wrap; width: 100%;
+    }
+}
+@media (max-width: 560px) {
+    .hdr-right { flex-direction: column; align-items: stretch; }
+    .hdr-right .search-box { width: 100%; }
+    .hdr-divider { display: none; }
+    .user-cluster { justify-content: center; }
+}
+
+/* Zone 1: Marke */
+.brand-block { line-height: 1; }
+.brand-block .brand-wordmark { text-decoration: none; display: inline-block; }
+
+/* Zone 2: Wochen-Navigation */
+.hdr-center { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+/* Zone 3: Suche & Benutzer */
+.hdr-right { display: flex; align-items: center; gap: 14px; }
+.hdr-divider { width: 1px; height: 28px; background: var(--line-strong); flex-shrink: 0; }
+.user-cluster { display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
+.user-cluster .user-profile-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: none; border-radius: 20px; font-weight: 600; }
+.user-cluster .user-profile-link:hover { background: var(--surface-alt); }
+.icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--line-strong);
+    color: var(--ink-soft); text-decoration: none; cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.icon-btn:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+/* Sekundäre Kopf-Buttons (z.B. Vorschau) */
+.btn-hdr {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    padding: 7px 14px; border-radius: 20px;
+    font-size: 0.85em; font-weight: 600; cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    text-decoration: none;
+}
+.btn-hdr:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+.header-area::before {
+    content: "";
+    position: absolute; inset: 0 auto 0 0; width: 5px;
+    background: var(--brand);
+    border-radius: var(--radius) 0 0 var(--radius);
+}
+.nav-main-group { display: flex; align-items: center; gap: 12px; }
+
+.week-display {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface-alt);
+    padding: 5px 12px;
+    border-radius: 30px;
+    border: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+}
+.btn-nav-circle {
+    text-decoration: none; background: var(--brand); color: #fff;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: bold; border: none; cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+.btn-nav-circle:hover { background: var(--brand-dark); color: #fff; }
+.btn-nav-circle:active { transform: scale(0.9); }
+.btn-nav-circle svg { display: block; }
+
+
+select.nav-dropdown {
+    padding: 5px 8px; border-radius: var(--radius-sm);
+    border: 1px solid var(--line-strong);
+    font-weight: 600; cursor: pointer; background: var(--surface);
+    font-variant-numeric: tabular-nums;
+}
+
+.search-box {
+    position: relative; display: flex; align-items: center;
+    background: var(--surface);
+    padding: 5px 6px 5px 12px; border-radius: 24px;
+    border: 1px solid var(--line-strong);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.search-box:focus-within { border-color: var(--t2); box-shadow: 0 0 0 3px var(--t2-tint); }
+.search-box input { border: none; background: transparent; outline: none; box-shadow: none; margin-left: 8px; width: 140px; font-size: 0.9em; }
+.search-box input:focus { box-shadow: none; }
+.search-box select { border: none; background: transparent; font-size: 0.85em; font-weight: 600; color: var(--ink-soft); padding: 2px; }
+.search-btn-inline {
+    background: var(--brand); color: #fff; border: none;
+    padding: 5px 12px; border-radius: 15px;
+    font-size: 0.78em; font-weight: 700; cursor: pointer; margin-left: 5px;
+    transition: background 0.15s;
+}
+.search-btn-inline:hover { background: var(--brand-dark); }
+
+.brand-wordmark { font-weight: 800; color: var(--brand); font-size: 26px; line-height: 1; white-space: nowrap; letter-spacing: 0.02em; }
+.brand-sub { font-size: 9px; color: var(--ink-faint); margin-top: 3px; }
+/* Domain unter dem Wortmarken-Logo: fett, gesperrt, in Kapitälchen */
+.brand-domain {
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    font-variant-caps: small-caps;
+    font-size: 1.2em;           /* etwas größer, damit die Kapitälchen lesbar bleiben */
+    color: var(--ink-soft, var(--ink-faint));
+}
+/* Hersteller-Info: kleines "i" mit Hover-Popup neben der Version */
+.hersteller-info { position: relative; display: inline-block; cursor: help; margin-left: 4px; vertical-align: middle; }
+.hersteller-i {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: var(--ink-faint); color: #fff; font-size: 9px; font-weight: 700;
+    font-style: normal; line-height: 1;
+}
+.hersteller-info:hover .hersteller-i, .hersteller-info:focus .hersteller-i { background: var(--brand); }
+.hersteller-pop {
+    display: none; position: absolute; left: 0; top: 150%; z-index: 300;
+    width: 240px; background: #fff; border: 1px solid var(--line-strong);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18); border-radius: 10px;
+    padding: 12px 14px; font-size: 12px; font-weight: 400; line-height: 1.5;
+    color: var(--ink); text-align: left; white-space: normal;
+}
+.hersteller-info:hover .hersteller-pop, .hersteller-info:focus .hersteller-pop { display: block; }
+.hersteller-pop a { color: var(--brand); text-decoration: none; }
+.hersteller-pop a:hover { text-decoration: underline; }
+.hersteller-version { color: var(--ink-faint); font-size: 11px; }
+
+.user-profile-link { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dashed var(--line-strong); cursor: pointer; }
+.user-profile-link:hover { color: var(--brand); border-bottom-color: var(--brand); }
+
+/* ---------- Zwischenablage-Leiste ---------- */
+.clipboard-bar {
+    background: var(--t2-tint); border: 1px solid var(--t2-line);
+    padding: 10px 14px; margin-bottom: 15px; border-radius: var(--radius-sm);
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 10px; z-index: 10;
+    box-shadow: var(--shadow-1);
+}
+.btn-clear-clipboard { background: var(--brand); color: #fff; padding: 5px 12px; text-decoration: none; border-radius: var(--radius-sm); font-size: 0.85em; font-weight: 600; }
+.btn-clear-clipboard:hover { background: var(--brand-dark); }
+.paste-btn { text-decoration: none; font-size: 1.3em; margin-left: 10px; }
+.clear-btn-small { text-decoration: none; font-size: 1.2em; margin-left: 10px; color: var(--brand); font-weight: bold; }
+
+/* ---------- Tages-Karten ---------- */
+.day-row {
+    scroll-margin-top: 60px;
+    margin-bottom: 34px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+}
+.day-header {
+    padding: 12px 20px;
+    min-height: 34px;
+    background: #e7ebf0;
+    border-bottom: 1px solid var(--line-strong);
+    color: var(--ink);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap;
+    font-size: 20px; font-weight: 700;
+    position: relative;
+}
+.day-header > strong { white-space: nowrap; }
+/* Druck-Buttons rechts – immer in EINER Zeile: bei vielen Mitarbeitern
+   teilen sich die Buttons die verfügbare Breite und kürzen ihre
+   Beschriftung mit „…" (der volle Name steht im Tooltip). */
+.day-header-buttons {
+    display: flex; flex-wrap: nowrap; gap: 8px; justify-content: flex-end;
+    margin-left: auto;
+    flex: 1 1 auto; min-width: 0;
+}
+.day-header button {
+    background: var(--surface); color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    flex: 0 1 auto; min-width: 40px;
+    display: inline-flex; align-items: center; gap: 4px; overflow: hidden;
+}
+.day-header button .db-label {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+/* Ab 7 Buttons: kompaktere Darstellung, damit alle bequem nebeneinander passen */
+.day-header-buttons:has(button:nth-child(7)) button {
+    font-size: 11.5px; padding: 5px 7px; gap: 3px;
+}
+/* Druck-Buttons tragen die Leitfarbe des jeweiligen Mitarbeiters */
+.day-header button:nth-of-type(1) { border-color: var(--t1-line); color: var(--t1); }
+.day-header button:nth-of-type(1):hover { background: var(--t1); border-color: var(--t1); color: #fff; }
+.day-header button:nth-of-type(2) { border-color: var(--t2-line); color: var(--t2); }
+.day-header button:nth-of-type(2):hover { background: var(--t2); border-color: var(--t2); color: #fff; }
+.day-header button:nth-of-type(3) { border-color: var(--t3-line); color: var(--t3); }
+.day-header button:nth-of-type(3):hover { background: var(--t3); border-color: var(--t3); color: #fff; }
+.day-header button:nth-of-type(4) { border-color: var(--t4-line); color: var(--t4); }
+.day-header button:nth-of-type(4):hover { background: var(--t4); border-color: var(--t4); color: #fff; }
+.day-header button:nth-of-type(5) { border-color: var(--t5-line); color: var(--t5); }
+.day-header button:nth-of-type(5):hover { background: var(--t5); border-color: var(--t5); color: #fff; }
+.day-header button:nth-of-type(6) { border-color: var(--t6-line); color: var(--t6); }
+.day-header button:nth-of-type(6):hover { background: var(--t6); border-color: var(--t6); color: #fff; }
+.day-header button:nth-of-type(7) { border-color: var(--t7-line); color: var(--t7); }
+.day-header button:nth-of-type(7):hover { background: var(--t7); border-color: var(--t7); color: #fff; }
+.day-header button:nth-of-type(8) { border-color: var(--t8-line); color: var(--t8); }
+.day-header button:nth-of-type(8):hover { background: var(--t8); border-color: var(--t8); color: #fff; }
+.day-header button:nth-of-type(9) { border-color: var(--t9-line); color: var(--t9); }
+.day-header button:nth-of-type(9):hover { background: var(--t9); border-color: var(--t9); color: #fff; }
+.day-header button:nth-of-type(10) { border-color: var(--t10-line); color: var(--t10); }
+.day-header button:nth-of-type(10):hover { background: var(--t10); border-color: var(--t10); color: #fff; }
+.day-header button:nth-of-type(11) { border-color: var(--t11-line); color: var(--t11); }
+.day-header button:nth-of-type(11):hover { background: var(--t11); border-color: var(--t11); color: #fff; }
+.day-header button:nth-of-type(12) { border-color: var(--t12-line); color: var(--t12); }
+.day-header button:nth-of-type(12):hover { background: var(--t12); border-color: var(--t12); color: #fff; }
+
+/* ---------- Mitarbeiter-Spalten (Signatur) ---------- */
+/* Container der Mitarbeiter-Spalten: bei bis zu 4 Spalten sauber nebeneinander.
+   Jede Spalte behält eine Mindestbreite, damit die Termine lesbar bleiben;
+   reicht der Platz nicht (z.B. schmaler Desktop bei 4 Spalten), wird der
+   Tagesbereich horizontal scrollbar statt die Inhalte zu zerquetschen. */
+/* Mindestbreite je Mitarbeiter-Spalte: immer mindestens so breit wie bei
+   einem Tag mit DREI Mitarbeitern (= 1/3 der sichtbaren Tagesbreite, die
+   2px gleichen die Spalten-Trennlinien aus). Ab 4 Mitarbeitern wird also
+   horizontal gescrollt statt die Spalten schmaler zu quetschen. */
+:root { --tech-col-min: max(280px, calc((100% - 2px) / 3)); }
+@media (max-width: 800px) { :root { --tech-col-min: 240px; } }
+
+.tech-columns-wrap {
+    display: flex; width: 100%;
+    overflow-x: auto;                    /* zu schmal? → Tag scrollt horizontal */
+    -webkit-overflow-scrolling: touch;   /* flüssiges Wischen auf iOS */
+    overscroll-behavior-x: contain;      /* kein "Zurück"-Geste-Auslösen beim Wischen */
+    /* Kein scroll-snap: stufenloses Scrollen in Echtzeit statt
+       spaltenweisem "Umblättern" */
+    /* Auffällige Scroll-Leiste: sichtbare Schiene + kräftiger Griff in der
+       Markenfarbe, damit sofort erkennbar ist, dass weitere Spalten folgen. */
+    scrollbar-width: auto;
+    scrollbar-color: var(--brand) #e3e7ec;
+}
+.tech-columns-wrap::-webkit-scrollbar { height: 18px; }
+.tech-columns-wrap::-webkit-scrollbar-track { background: #e3e7ec; border-top: 1px solid var(--line); }
+.tech-columns-wrap::-webkit-scrollbar-thumb {
+    background: var(--brand); border-radius: 9px;
+    border: 3px solid #e3e7ec;           /* Schiene scheint durch → wirkt griffiger */
+}
+.tech-columns-wrap::-webkit-scrollbar-thumb:hover { background: #a50e26; }
+
+/* Zusätzliche Bildlaufleiste OBERHALB der Spalten (JS: attachTopScrollbar).
+   Sie erscheint nur, wenn tatsächlich horizontal gescrollt werden kann,
+   und läuft synchron zur unteren Leiste. */
+.hscroll-top {
+    overflow-x: auto; overflow-y: hidden; height: 20px;
+    scrollbar-width: auto; scrollbar-color: var(--brand) #e3e7ec;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+}
+.hscroll-top::-webkit-scrollbar { height: 18px; }
+.hscroll-top::-webkit-scrollbar-track { background: #e3e7ec; border-bottom: 1px solid var(--line); }
+.hscroll-top::-webkit-scrollbar-thumb {
+    background: var(--brand); border-radius: 9px;
+    border: 3px solid #e3e7ec;
+}
+.hscroll-top::-webkit-scrollbar-thumb:hover { background: #a50e26; }
+.hscroll-top > div { height: 1px; }
+
+.tech-column-1, .tech-column-2, .tech-column-3, .tech-column-4, .tech-column-5, .tech-column-6, .tech-column-7, .tech-column-8, .tech-column-9, .tech-column-10, .tech-column-11, .tech-column-12 {
+    /* wachsen gleichmäßig, schrumpfen aber nie unter die Mindestbreite */
+    flex: 1 0 var(--tech-col-min);
+    min-width: var(--tech-col-min);
+    display: flex; flex-direction: column;
+    background: var(--surface); position: relative;
+}
+/* Trennlinie zwischen den Spalten (alle außer der letzten) */
+.tech-column-1, .tech-column-2, .tech-column-3, .tech-column-4, .tech-column-5, .tech-column-6, .tech-column-7, .tech-column-8, .tech-column-9, .tech-column-10, .tech-column-11 { border-right: 1px solid var(--line-strong); }
+.tech-column-12 { border-right: none; }
+
+.tech-column-1::before, .tech-column-2::before, .tech-column-3::before, .tech-column-4::before, .tech-column-5::before, .tech-column-6::before, .tech-column-7::before, .tech-column-8::before, .tech-column-9::before, .tech-column-10::before, .tech-column-11::before, .tech-column-12::before {
+    content: ""; display: block; height: 5px; width: 100%;
+}
+.tech-column-1::before { background: var(--t1); }
+.tech-column-2::before { background: var(--t2); }
+.tech-column-3::before { background: var(--t3); }
+.tech-column-4::before { background: var(--t4); }
+.tech-column-5::before { background: var(--t5); }
+.tech-column-6::before { background: var(--t6); }
+.tech-column-7::before { background: var(--t7); }
+.tech-column-8::before { background: var(--t8); }
+.tech-column-9::before { background: var(--t9); }
+.tech-column-10::before { background: var(--t10); }
+.tech-column-11::before { background: var(--t11); }
+.tech-column-12::before { background: var(--t12); }
+
+.tech-header-block { display: flex; flex-direction: column; width: 100%; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.tech-column-1 .tech-header-block { background: var(--t1-tint); }
+.tech-column-2 .tech-header-block { background: var(--t2-tint); }
+.tech-column-3 .tech-header-block { background: var(--t3-tint); }
+.tech-column-4 .tech-header-block { background: var(--t4-tint); }
+.tech-column-5 .tech-header-block { background: var(--t5-tint); }
+.tech-column-6 .tech-header-block { background: var(--t6-tint); }
+.tech-column-7 .tech-header-block { background: var(--t7-tint); }
+.tech-column-8 .tech-header-block { background: var(--t8-tint); }
+.tech-column-9 .tech-header-block { background: var(--t9-tint); }
+.tech-column-10 .tech-header-block { background: var(--t10-tint); }
+.tech-column-11 .tech-header-block { background: var(--t11-tint); }
+.tech-column-12 .tech-header-block { background: var(--t12-tint); }
+
+.tech-name { padding: 12px 12px 6px 12px; text-align: center; font-weight: 700; position: relative; }
+.tech-badge { padding: 2px 10px; border-radius: 20px; font-size: 0.8em; font-weight: 700; color: #fff; }
+.tech-badge-sub { font-size: 0.72em; font-weight: 600; color: var(--ink-faint); }
+.tech-column-1 .tech-badge { background: var(--t1); }
+.tech-column-2 .tech-badge { background: var(--t2); }
+.tech-column-3 .tech-badge { background: var(--t3); }
+.tech-column-4 .tech-badge { background: var(--t4); }
+.tech-column-5 .tech-badge { background: var(--t5); }
+.tech-column-6 .tech-badge { background: var(--t6); }
+.tech-column-7 .tech-badge { background: var(--t7); }
+.tech-column-8 .tech-badge { background: var(--t8); }
+.tech-column-9 .tech-badge { background: var(--t9); }
+.tech-column-10 .tech-badge { background: var(--t10); }
+.tech-column-11 .tech-badge { background: var(--t11); }
+.tech-column-12 .tech-badge { background: var(--t12); }
+
+.v-label { color: var(--brand); font-size: 0.9em; font-style: italic; margin-left: 5px; }
+.btn-v-toggle, .btn-color-toggle {
+    background: rgba(255,255,255,0.7); border: 1px solid var(--line-strong);
+    border-radius: 4px; cursor: pointer; font-size: 0.8em; padding: 1px 6px;
+    color: var(--ink-soft); vertical-align: middle; line-height: 1.4;
+}
+.btn-v-toggle:hover, .btn-color-toggle:hover { background: #fff; color: var(--ink); }
+.btn-color-toggle { margin-right: 5px; font-size: 10px; }
+
+/* Tages-Notizfeld (bewusst als "Notizzettel" abgesetzt) */
+.info-input {
+    width: 92%; margin: 4px 4% 6px 4%;
+    border: 1px dashed var(--warn-line);
+    background: #fffdf2;
+    color: var(--ink);
+    font-weight: 600; text-align: center;
+    padding: 6px; border-radius: var(--radius-sm);
+}
+
+/* ---------- Zeit-Slots ---------- */
+.slot {
+    scroll-margin-top: 90px;
+    min-height: 70px; padding: 10px;
+    display: flex; gap: 15px;
+    border-bottom: 1px solid var(--line);
+    align-items: flex-start; position: relative;
+    transition: background 0.15s;
+    font-variant-numeric: tabular-nums;
+}
+.slot-even { background: var(--surface); }
+.slot-odd { background: var(--surface-alt); }
+/* Hover übernimmt die Leitfarbe des jeweiligen Mitarbeiters:
+   Spalte 1 (links) → Grün, Spalte 2 (rechts) → Blau */
+.tech-column-1 .slot:hover { background: var(--t1-hover) !important; }
+.tech-column-2 .slot:hover { background: var(--t2-hover) !important; }
+.tech-column-3 .slot:hover { background: var(--t3-hover) !important; }
+.tech-column-4 .slot:hover { background: var(--t4-hover) !important; }
+.tech-column-5 .slot:hover { background: var(--t5-hover) !important; }
+.tech-column-6 .slot:hover { background: var(--t6-hover) !important; }
+.tech-column-7 .slot:hover { background: var(--t7-hover) !important; }
+.tech-column-8 .slot:hover { background: var(--t8-hover) !important; }
+.tech-column-9 .slot:hover { background: var(--t9-hover) !important; }
+.tech-column-10 .slot:hover { background: var(--t10-hover) !important; }
+.tech-column-11 .slot:hover { background: var(--t11-hover) !important; }
+.tech-column-12 .slot:hover { background: var(--t12-hover) !important; }
+.slot[draggable="true"]:active { opacity: 0.5; cursor: grabbing; border: 2px dashed var(--brand); }
+.slot.drag-over { background: var(--t2-tint) !important; border: 2px dashed var(--t2) !important; }
+
+.slot-time { font-weight: 800; color: var(--ink-soft); min-width: 50px; font-size: 0.9em; padding-top: 2px; }
+.slot-content { flex: 1; width: 100%; font-size: 1.05em; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* In gebuchten Slots rechts Platz für die Aktions-Buttons (Kopieren/EDIT)
+   freihalten, damit der Termintext dort umbricht statt überdeckt zu werden.
+   Der Freiraum gilt für den gesamten Inhalt inkl. der Einsatzart-Badges. */
+.status-booked .slot-content { padding-right: 52px; }
+.status-booked .slot-content > * { max-width: 100%; }
+/* Die Einsatzart-Zeile darf umbrechen und nicht in den Button-Bereich ragen */
+.badge-row { display: flex; flex-wrap: wrap; gap: 4px 0; align-items: flex-start; max-width: 100%; }
+.badge-row > * { overflow-wrap: anywhere; }
+
+/* Gebuchte Termine erben die Leitfarbe ihres Mitarbeiters */
+.status-booked {
+    background: var(--surface) !important;
+    margin: 4px 8px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-1);
+    border: 1px solid var(--line);
+}
+.tech-column-1 .status-booked { border-left: 5px solid var(--t1) !important; }
+.tech-column-2 .status-booked { border-left: 5px solid var(--t2) !important; }
+.tech-column-3 .status-booked { border-left: 5px solid var(--t3) !important; }
+.tech-column-4 .status-booked { border-left: 5px solid var(--t4) !important; }
+.tech-column-5 .status-booked { border-left: 5px solid var(--t5) !important; }
+.tech-column-6 .status-booked { border-left: 5px solid var(--t6) !important; }
+.tech-column-7 .status-booked { border-left: 5px solid var(--t7) !important; }
+.tech-column-8 .status-booked { border-left: 5px solid var(--t8) !important; }
+.tech-column-9 .status-booked { border-left: 5px solid var(--t9) !important; }
+.tech-column-10 .status-booked { border-left: 5px solid var(--t10) !important; }
+.tech-column-11 .status-booked { border-left: 5px solid var(--t11) !important; }
+.tech-column-12 .status-booked { border-left: 5px solid var(--t12) !important; }
+.tech-column-1 .status-booked:hover { background: var(--t1-hover) !important; }
+.tech-column-2 .status-booked:hover { background: var(--t2-hover) !important; }
+.tech-column-3 .status-booked:hover { background: var(--t3-hover) !important; }
+.tech-column-4 .status-booked:hover { background: var(--t4-hover) !important; }
+.tech-column-5 .status-booked:hover { background: var(--t5-hover) !important; }
+.tech-column-6 .status-booked:hover { background: var(--t6-hover) !important; }
+.tech-column-7 .status-booked:hover { background: var(--t7-hover) !important; }
+.tech-column-8 .status-booked:hover { background: var(--t8-hover) !important; }
+.tech-column-9 .status-booked:hover { background: var(--t9-hover) !important; }
+.tech-column-10 .status-booked:hover { background: var(--t10-hover) !important; }
+.tech-column-11 .status-booked:hover { background: var(--t11-hover) !important; }
+.tech-column-12 .status-booked:hover { background: var(--t12-hover) !important; }
+
+.status-booked .slot-time { cursor: grab; }
+.status-booked .slot-time:active { cursor: grabbing; }
+
+.status-ausgefallen { opacity: 0.55; background: var(--surface-alt) !important; }
+.status-ausgefallen .slot-content { text-decoration: line-through; }
+
+.is-locked-by-other, .is-locked-by-other:hover {
+    background: var(--danger-tint) !important;
+    outline: 2px solid var(--danger);
+    outline-offset: -2px;
+    cursor: not-allowed !important;
+}
+.is-locked-by-other .lock-hinweis {
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 0.85em;
+    line-height: 1.35;
+    padding: 6px 10px;
+    width: 100%;
+}
+/* Wenn ein Slot gesperrt ist, die normalen "+"-Buttons/Inhalte zurücknehmen,
+   damit der Hinweis klar im Vordergrund steht. */
+.is-locked-by-other .slot-add-btn,
+.is-locked-by-other .add-btn { display: none !important; }
+.is-my-lock { outline: 2px solid var(--t2) !important; outline-offset: -2px; }
+
+/* Untertitel in der Termin-Modal-Überschrift (Datum, Zeit, Mitarbeiter) */
+.modal-subtitle {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.62em;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+}
+
+.edit-trigger {
+    position: absolute; top: 5px; right: 8px;
+    font-size: 10px; font-weight: bold; color: var(--ink-faint);
+    text-decoration: none; border: 1px solid var(--line);
+    padding: 2px 6px; border-radius: 3px; background: var(--surface); z-index: 5;
+}
+.edit-trigger:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+
+.slot-action-buttons { position: absolute; right: 4px; top: 4px; display: flex; flex-direction: column; gap: 5px; z-index: 5; align-items: center; }
+.btn-slot-edit { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line-strong); border-radius: 3px; padding: 1px 4px; font-size: 0.68em; text-decoration: none; font-weight: bold; cursor: pointer; }
+.btn-slot-edit:hover { background: var(--surface-alt); color: var(--ink); }
+
+.slot-footer-kuerzel {
+    font-size: 0.65em; color: var(--ink-faint); margin-top: 5px;
+    border-top: 1px solid var(--line); padding-top: 3px;
+    /* Bei schmalen Spalten (3-4 Mitarbeiter) umbrechen statt links aus der
+       Karte zu laufen; Einträge bleiben rechtsbündig */
+    display: flex; flex-wrap: wrap; justify-content: flex-end;
+    gap: 2px 12px; min-width: 0; text-align: right;
+}
+.slot-footer-kuerzel > span { white-space: nowrap; }
+
+.tel-link { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--line-strong); }
+.tel-link:hover { background: var(--warn-tint); }
+.tel-box { cursor: pointer; padding: 2px 5px; border-radius: 3px; transition: background 0.15s; }
+.tel-box.is-marked { background: var(--ok) !important; color: #fff !important; border: 1px solid var(--ok) !important; }
+.maps-route-link { position: relative; z-index: 2; }
+.maps-route-link:hover { color: var(--t2) !important; text-decoration: underline !important; }
+
+.badge-art { background: var(--surface-alt); color: var(--ink); padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700; border: 1px solid var(--line); margin-right: 8px; display: inline-block; }
+.badge-unterart { background: var(--surface); color: var(--brand); border: 1px solid var(--brand); padding: 1px 6px; border-radius: 3px; font-size: 0.7em; margin-right: 8px; vertical-align: middle; }
+.badge-opt { background: var(--surface-alt); color: var(--ink-soft); border: 1px solid var(--line); padding: 2px 7px; border-radius: 4px; font-size: 0.75em; margin-right: 5px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+.check-green { color: var(--ok); font-weight: bold; font-size: 1.1em; }
+
+/* ---------- Seitliche Tages-Navigation ---------- */
+.sticky-day-nav { position: fixed; left: 15px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 100; }
+.sticky-day-nav a {
+    background: var(--surface); color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    text-decoration: none; width: 45px; height: 45px; border-radius: 50%;
+    font-size: 0.85em; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.25s; box-shadow: var(--shadow-1);
+    overflow: hidden; white-space: nowrap;
+}
+.sticky-day-nav a:hover { width: 130px; background: var(--brand); border-color: var(--brand); color: #fff; border-radius: 25px; justify-content: flex-start; padding-left: 15px; }
+.sticky-day-nav a span { display: none; margin-left: 10px; font-weight: bold; }
+.sticky-day-nav a:hover span { display: inline; }
+.nav-cal-btn { background: var(--brand) !important; border-color: var(--brand) !important; color: #fff !important; }
+
+.float-nav-btn {
+    position: fixed;
+    width: 45px; height: 45px; border-radius: 50%;
+    background: var(--surface); color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow-1);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; z-index: 9999;
+    transition: all 0.25s ease; opacity: 0.9;
+}
+.float-nav-btn svg { display: block; }
+.float-nav-btn:hover { background: var(--brand); border-color: var(--brand); opacity: 1; color: #fff; }
+/* Linker Pfeil ("vorige Woche"): in der Sidebar-Spalte, aber klar unterhalb
+   der Wochentage abgesetzt, damit ein deutlicher Abstand zu Sonntag bleibt. */
+.float-nav-left  { left: 15px; bottom: 24px; }
+/* Rechter Pfeil ("nächste Woche"): gleiche Höhe wie der linke Pfeil. */
+.float-nav-right { right: 15px; bottom: 24px; }
+
+/* Dezenter "Nach oben"-Button: kleiner als die Wochen-Pfeile, im Grau der
+   Tagestitel-Leisten, deutlich oberhalb des rechten Pfeils. Erscheint erst
+   nach dem Scrollen. */
+.scroll-top-btn {
+    position: fixed; right: 19px; bottom: 92px;
+    width: 37px; height: 37px; border-radius: 50%;
+    background: #e7ebf0; color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow-1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 9999;
+    opacity: 0; visibility: hidden; transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+.scroll-top-btn.is-visible { opacity: 0.9; visibility: visible; transform: translateY(0); }
+.scroll-top-btn:hover { background: var(--brand); border-color: var(--brand); color: #fff; opacity: 1; }
+.scroll-top-btn svg { display: block; }
+
+/* ---------- Jahreskalender ---------- */
+.year-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+.month-table { width: 100%; border-collapse: collapse; font-size: 0.75em; font-variant-numeric: tabular-nums; }
+.month-table th { background: var(--surface-alt); color: var(--ink-soft); padding: 3px; }
+.month-table td { text-align: center; border: 1px solid var(--line); padding: 0; }
+.month-table td a { text-decoration: none; color: var(--ink); display: block; padding: 3px 2px; }
+.month-table td a:hover { background: var(--brand); color: #fff; }
+.month-table td.today { background: var(--brand-tint) !important; font-weight: bold; box-shadow: inset 0 0 0 2px var(--brand); }
+.month-table td.today a, .month-table td.today { color: var(--brand) !important; }
+.month-table td.weekend { background: var(--surface-alt); color: var(--ink-faint); }
+.kw-label { color: var(--brand); font-weight: bold; font-size: 0.8em; padding-right: 5px; }
+
+/* ---------- Modale ---------- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(29, 39, 51, 0.55); overflow-y: auto; }
+.modal-content { background: var(--surface); margin: 2vh auto; padding: 25px; border-radius: 14px; width: 90%; max-width: 750px; box-shadow: var(--shadow-2); }
+
+/* Termin-Modal: eigener Scroll-Container, damit die Aktionsleiste oben fixiert bleiben kann */
+.modal-content-scroll { max-height: 94vh; overflow-y: auto; display: flex; flex-direction: column; padding: 0; }
+.modal-sticky-top {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--surface);
+    padding: 20px 25px 14px;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 4px 10px -6px rgba(0,0,0,0.15);
+}
+.modal-content-scroll form { padding: 14px 25px 25px; }
+.modal-actions-top { display: flex; gap: 10px; margin-top: 14px; }
+.modal-actions-top .btn-primary { width: auto; }
+.btn-modal-delete, .btn-modal-cancel {
+    border-radius: var(--radius-sm, 8px);
+    font-size: 1.05em; font-weight: 600; cursor: pointer;
+    padding: 12px; border: 1px solid var(--line-strong);
+    background: var(--surface);
+}
+.btn-modal-delete { color: var(--brand); border-color: var(--brand-tint); }
+.btn-modal-delete:hover { background: var(--brand); color: #fff; border-color: var(--brand); }
+.btn-modal-cancel { color: var(--ink-soft); }
+.btn-modal-cancel:hover { background: var(--surface-alt); color: var(--ink); }
+
+.modal-content-small { max-width: 450px !important; border-radius: 14px !important; padding: 25px !important; box-shadow: var(--shadow-2) !important; }
+.modal-content-small h3 { margin-top: 0; color: var(--brand); border-bottom: 2px solid var(--line); padding-bottom: 10px; margin-bottom: 20px; }
+.modal-content-small textarea, .modal-content-small input[type="text"], .modal-content-small input[type="password"] {
+    width: 100%; margin-top: 5px; font-size: 1em;
+}
+.modal-footer-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+
+.form-group { display: flex; flex-direction: column; margin-bottom: 10px; }
+.form-group label { font-size: 0.78em; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+.form-group label.req::after { content: " *"; color: var(--brand); font-weight: bold; }
+.form-group input, .form-group select, .form-group textarea { font-size: 1em; }
+.triple-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.triple-row .form-group { margin-bottom: 0; }
+.col-plz { width: 90px; flex-shrink: 0; }
+.col-ort { flex: 2; }
+.col-pk { flex: 2; }
+input[list]::-webkit-calendar-picker-indicator { display: none !important; }
+
+.options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--surface-alt); padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-sm); margin-bottom: 15px; }
+.opt-item { display: flex; align-items: center; gap: 5px; font-size: 0.85em; }
+.opt-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; margin: 0; }
+
+.btn-primary { width: 100%; padding: 12px; font-size: 1.05em; }
+
+.msg-banner { padding: 10px; margin-bottom: 10px; border-radius: var(--radius-sm); text-align: center; font-weight: bold; }
+
+/* ---------- Suchergebnis-Modal ---------- */
+#searchResultModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(29, 39, 51, 0.55); }
+.modal-content-modern { background: var(--surface); margin: 5% auto; padding: 0; width: 90%; max-width: 800px; border-radius: 14px; box-shadow: var(--shadow-2); overflow: hidden; }
+.modal-header { background: var(--surface-alt); padding: 15px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+
+.pagination { display: flex; justify-content: center; gap: 5px; padding: 15px; border-top: 1px solid var(--line); }
+.pagination button { padding: 5px 12px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; border-radius: 4px; }
+.pagination button:hover, .pagination button.active { background: var(--t2); border-color: var(--t2); color: #fff; }
+
+/* ---------- Chat ---------- */
+#chat-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; align-items: flex-end; }
+#chat-fab {
+    width: 42px; height: 42px; background: var(--brand); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    color: #fff; font-size: 22px; cursor: pointer;
+    box-shadow: var(--shadow-2); transition: transform 0.2s, background 0.15s;
+}
+#chat-fab:hover { transform: scale(1.08); background: var(--brand-dark); }
+#chat-container {
+    width: 230px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); margin-bottom: 15px; display: none;
+    flex-direction: column; box-shadow: var(--shadow-2); overflow: hidden;
+    transform-origin: bottom right; animation: chatPop 0.3s ease-out;
+}
+@keyframes chatPop { from { opacity: 0; transform: scale(0.5) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+#chat-header { background: var(--brand); color: #fff; padding: 8px; font-weight: bold; text-align: center; font-size: 13px; }
+#chat-box { height: 250px; overflow-y: auto; padding: 10px; font-size: 15px; background: var(--surface); }
+#chat-input { border: none; border-radius: 0; padding: 10px; width: 100%; outline: none; font-size: 12px; border-top: 1px solid var(--line); }
+#chat-input:focus { box-shadow: none; }
+.chat-msg { margin-bottom: 8px; padding: 6px 8px; border-radius: var(--radius-sm); background: var(--surface-alt); word-wrap: break-word; }
+.chat-msg strong { color: var(--brand); display: block; font-size: 10px; }
+
+/* ---------- Sprung-Feedback ---------- */
+.jump-highlight { outline: 3px solid var(--brand); outline-offset: 2px; transition: outline-color 1s ease; animation: jumpPulse 2.5s ease forwards; }
+@keyframes jumpPulse { 0%, 60% { outline-color: var(--brand); } 100% { outline-color: transparent; } }
+
+/* ---------- Wochenvorschau (Modal-Inhalt) ---------- */
+.pw-grid { scrollbar-width: auto; scrollbar-color: var(--brand) #e3e7ec; }
+.pw-grid::-webkit-scrollbar { height: 18px; width: 12px; }
+.pw-grid::-webkit-scrollbar-track { background: #e3e7ec; }
+.pw-grid::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 9px; border: 3px solid #e3e7ec; }
+.pw-grid::-webkit-scrollbar-thumb:hover { background: #a50e26; }
+
+.pw-day { display: flex; flex-direction: column; background: var(--surface-alt); border-radius: var(--radius-sm); border: 1px solid var(--line); overflow: hidden; min-height: 0; }
+.pw-today { border-color: var(--brand) !important; box-shadow: 0 0 0 2px var(--brand-tint); }
+.pw-day-header { background: var(--surface); border-bottom: 1px solid var(--line); text-align: center; font-weight: bold; font-size: 11px; padding: 4px 2px; line-height: 1.3; flex-shrink: 0; }
+.pw-today .pw-day-header { background: var(--brand); color: #fff; }
+.pw-tech { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--line); overflow: hidden; }
+.pw-tech:last-child { border-right: none; }
+.pw-tech-header { font-size: 9px; font-weight: bold; text-align: center; padding: 3px 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.pw-tech-1 .pw-tech-header { background: var(--t1-tint); color: var(--t1); border-bottom: 2px solid var(--t1); }
+.pw-tech-2 .pw-tech-header { background: var(--t2-tint); color: var(--t2); border-bottom: 2px solid var(--t2); }
+.pw-tech-3 .pw-tech-header { background: var(--t3-tint); color: var(--t3); border-bottom: 2px solid var(--t3); }
+.pw-tech-4 .pw-tech-header { background: var(--t4-tint); color: var(--t4); border-bottom: 2px solid var(--t4); }
+.pw-tech-5 .pw-tech-header { background: var(--t5-tint); color: var(--t5); border-bottom: 2px solid var(--t5); }
+.pw-tech-6 .pw-tech-header { background: var(--t6-tint); color: var(--t6); border-bottom: 2px solid var(--t6); }
+.pw-tech-7 .pw-tech-header { background: var(--t7-tint); color: var(--t7); border-bottom: 2px solid var(--t7); }
+.pw-tech-8 .pw-tech-header { background: var(--t8-tint); color: var(--t8); border-bottom: 2px solid var(--t8); }
+.pw-tech-9 .pw-tech-header { background: var(--t9-tint); color: var(--t9); border-bottom: 2px solid var(--t9); }
+.pw-tech-10 .pw-tech-header { background: var(--t10-tint); color: var(--t10); border-bottom: 2px solid var(--t10); }
+.pw-tech-11 .pw-tech-header { background: var(--t11-tint); color: var(--t11); border-bottom: 2px solid var(--t11); }
+.pw-tech-12 .pw-tech-header { background: var(--t12-tint); color: var(--t12); border-bottom: 2px solid var(--t12); }
+.pw-dark { background: #d6dae0 !important; }
+.pw-dark .pw-tech-header { background: #c2c8d0 !important; color: #4a5058 !important; border-bottom-color: #c2c8d0 !important; }
