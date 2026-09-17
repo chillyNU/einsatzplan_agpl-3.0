@@ -24,6 +24,7 @@ Freie Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
 - [Screenshots](#screenshots)
 - [Voraussetzungen](#voraussetzungen)
 - [Installation](#installation)
+- [Update einer bestehenden Installation](UPGRADE.md)
 - [Eigenes Impressum](#eigenes-impressum)
 - [Lizenz](#lizenz)
 - [Beitragen](#beitragen)
@@ -71,6 +72,10 @@ Freie Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
 
 Für MySQL statt SQLite: `mysql_setup.php` vor oder anstelle von `install.php`
 aufrufen; Details siehe Kommentare in der Datei.
+
+Hast du bereits eine laufende Installation und willst nur aktualisieren, statt
+neu einzurichten? Siehe [`UPGRADE.md`](UPGRADE.md) – deine Datenbank und
+Zugangsdaten bleiben dabei unangetastet.
 
 ## Eigenes Impressum
 
