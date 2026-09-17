@@ -1,3 +1,14 @@
+<p align="center">
+  <img src=".github/banner.png" alt="Einsatzplan – Dienst- und Terminplanung für den Außendienst" width="100%">
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Lizenz-AGPL--3.0-d81e2c" alt="Lizenz: AGPL-3.0"></a>
+  <img src="https://img.shields.io/badge/PHP-8.1%2B-777bb4" alt="PHP 8.1+">
+  <img src="https://img.shields.io/badge/Datenbank-SQLite%20%7C%20MySQL-2a3542" alt="SQLite oder MySQL">
+  <img src="https://img.shields.io/badge/Self--Hosted-ja-2a3542" alt="Self-Hosted">
+</p>
+
 # Einsatzplan
 
 Web-basierte Dienst-/Terminplanung für den Außendienst (z. B. Pflegedienste,
@@ -8,6 +19,17 @@ PLZ-Autovervollständigung und einen Admin-Bereich zur Konfiguration.
 Früher als kommerzielle Software vertrieben, seit diesem Repository freie
 Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
 
+## Inhalt
+
+- [Funktionen](#funktionen)
+- [Screenshots](#screenshots)
+- [Voraussetzungen](#voraussetzungen)
+- [Installation](#installation)
+- [Eigenes Impressum](#eigenes-impressum)
+- [Lizenz](#lizenz)
+- [Beitragen](#beitragen)
+- [Sicherheit](#sicherheit)
+
 ## Funktionen
 
 - Wochenansicht mit frei konfigurierbarer Mitarbeiteranzahl pro Wochentag
@@ -16,6 +38,20 @@ Software unter der **GNU AGPL-3.0** – siehe [`LICENSE`](LICENSE).
 - Terminverwaltung inkl. Vertretungen, Notizen, Druckansichten
 - PLZ-/Ortsvorschläge auf Basis eines mitgelieferten deutschen Verzeichnisses
 - Läuft auf SQLite (Zero-Config) oder MySQL
+
+## Screenshots
+
+| Tagesansicht | Wochenübersicht |
+|---|---|
+| ![Tagesansicht](.github/screenshots/tagesansicht.png) | ![Wochenübersicht](.github/screenshots/wochenuebersicht.png) |
+
+| Mobile Ansicht | Neuer Termin |
+|---|---|
+| ![Mobile Ansicht](.github/screenshots/mobile-ansicht.png) | ![Neuer Termin](.github/screenshots/neuer-termin.png) |
+
+| Jahreskalender | Druckansicht |
+|---|---|
+| ![Jahreskalender](.github/screenshots/jahreskalender.png) | ![Druckansicht](.github/screenshots/druckansicht.png) |
 
 ## Voraussetzungen
 
@@ -57,8 +93,8 @@ Lizenzbedingungen sind in [`NOTICE.md`](NOTICE.md) aufgeführt.
 
 ## Beitragen
 
-Issues und Pull Requests sind willkommen. Bitte grob beschreiben, was sich
-ändert und warum – bei größeren Änderungen gerne vorab ein Issue eröffnen.
+Issues und Pull Requests sind willkommen – siehe [`CONTRIBUTING.md`](CONTRIBUTING.md)
+für Details.
 
 ## Sicherheit
 

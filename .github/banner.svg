@@ -1,0 +1,57 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1d2733"/>
+      <stop offset="1" stop-color="#141b24"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- dezentes Kalender-/Rastermotiv im Hintergrund -->
+  <g stroke="#2a3542" stroke-width="1" opacity="0.7">
+    <line x1="0" y1="120" x2="1280" y2="120"/>
+    <line x1="0" y1="220" x2="1280" y2="220"/>
+    <line x1="0" y1="320" x2="1280" y2="320"/>
+    <line x1="0" y1="420" x2="1280" y2="420"/>
+    <line x1="0" y1="520" x2="1280" y2="520"/>
+    <line x1="160" y1="0" x2="160" y2="640"/>
+    <line x1="320" y1="0" x2="320" y2="640"/>
+    <line x1="480" y1="0" x2="480" y2="640"/>
+    <line x1="800" y1="0" x2="800" y2="640"/>
+    <line x1="960" y1="0" x2="960" y2="640"/>
+    <line x1="1120" y1="0" x2="1120" y2="640"/>
+  </g>
+
+  <!-- ein paar "Termin"-Blöcke als dezentes Motiv, in Markenrot -->
+  <rect x="60" y="140" width="80" height="60" rx="6" fill="#d81e2c" opacity="0.85"/>
+  <rect x="200" y="240" width="80" height="60" rx="6" fill="#d81e2c" opacity="0.55"/>
+  <rect x="1000" y="340" width="80" height="60" rx="6" fill="#d81e2c" opacity="0.55"/>
+  <rect x="1140" y="440" width="80" height="60" rx="6" fill="#d81e2c" opacity="0.85"/>
+  <rect x="60" y="440" width="80" height="60" rx="6" fill="#d81e2c" opacity="0.35"/>
+
+  <!-- Markenname -->
+  <text x="640" y="300" text-anchor="middle"
+        font-family="'Space Grotesk','Segoe UI',Arial,sans-serif" font-weight="700"
+        font-size="86" fill="#ffffff" letter-spacing="2">EINSATZPLAN</text>
+
+  <!-- roter Unterstrich als Akzent -->
+  <rect x="470" y="326" width="340" height="6" rx="3" fill="#d81e2c"/>
+
+  <!-- Tagline -->
+  <text x="640" y="382" text-anchor="middle"
+        font-family="'Inter','Segoe UI',Arial,sans-serif" font-weight="400"
+        font-size="26" fill="#c3cbd4">Dienst- und Terminplanung für den Außendienst</text>
+
+  <!-- Badge-Zeile -->
+  <g font-family="'IBM Plex Mono',ui-monospace,Consolas,monospace" font-size="18" font-weight="500">
+    <rect x="452" y="430" width="118" height="38" rx="19" fill="#2a3542"/>
+    <text x="511" y="455" text-anchor="middle" fill="#e8ebee">AGPL-3.0</text>
+
+    <rect x="582" y="430" width="80" height="38" rx="19" fill="#2a3542"/>
+    <text x="622" y="455" text-anchor="middle" fill="#e8ebee">PHP</text>
+
+    <rect x="674" y="430" width="154" height="38" rx="19" fill="#2a3542"/>
+    <text x="751" y="455" text-anchor="middle" fill="#e8ebee">Self-Hosted</text>
+  </g>
+</svg>
