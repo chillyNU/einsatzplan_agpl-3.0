@@ -135,12 +135,14 @@ $formatedDate = date('d.m.Y', strtotime($datum));
                     <?php if ($t): ?>
                         <div class="<?= ($t['ausgefallen'] == 1) ? 'strikethrough' : '' ?>">
                             <div class="badge-wrapper">
+                                <?php if (!empty($t['einsatzart']) || !empty($t['ankunft'])): ?>
                                 <span class="badge-art">
                                     <?= h($t['einsatzart']) ?> 
                                     <?php if(!empty($t['ankunft'])): ?> 
                                         (ca. <?= preg_match('/^\d{4}$/', $t['ankunft']) ? substr($t['ankunft'],0,2).':'.substr($t['ankunft'],2) : h($t['ankunft']) ?> Uhr) 
                                     <?php endif; ?>
                                 </span>
+                                <?php endif; ?>
                                 <?php if (!empty($t['unterart']) && $t['unterart'] !== '-'): ?><span class="badge-unterart"><?= h($t['unterart']) ?></span><?php endif; ?>
                                 <?php 
                                     foreach($dynamischeOptionen as $opt) {

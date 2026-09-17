@@ -460,10 +460,12 @@ function reqClass(string $feld): string {
                             <div class="slot-content">
                                 <?php if($t): ?>
                                     <div class="badge-row">
+                                       <?php if (!empty($t['einsatzart']) || !empty($t['ankunft'])): ?>
                                        <span class="badge-art">
                                             <?= h($t['einsatzart']) ?> 
                                            <?= empty($t['ankunft']) ? '' : '<span style="font-weight:normal; font-size:0.9em;"> (ca. ' . (preg_match('/^\d{4}$/', $t['ankunft']) ? substr($t['ankunft'],0,2).':'.substr($t['ankunft'],2) : h($t['ankunft'])) . ' Uhr)</span>' ?>
                                         </span>
+                                        <?php endif; ?>
                                         <?php if(!empty($t['unterart']) && $t['unterart'] !== '-'): ?>
                                             <span class="badge-unterart"><?= h($t['unterart']) ?></span>
                                         <?php endif; ?>
